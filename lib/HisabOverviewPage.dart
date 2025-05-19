@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hisabkitab/Details.dart';
 
 import 'HiveService.dart';
+import 'package:hisabkitab/Global.dart';
 
 class HisabOverviewPage extends StatefulWidget {
   @override
@@ -237,12 +238,23 @@ class _HisabOverviewPageState extends State<HisabOverviewPage> {
                       onPressed: () {
                         // Handle submission
                         if (namecontroller.text.isEmpty) {
-                          FlutterCustomToast.showToast(
-                            context: context,
-                            message: "Please enter username",
-                            backgroundColor: red,
-                            textStyle: TextStyle(fontSize: 14, color: Colors.white),
+
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Please enter username",
+                                style: TextStyle(fontSize: 14, color: Colors.white),
+                              ),
+                              backgroundColor: red,
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              duration: Duration(seconds: 2),
+                            ),
                           );
+
                         } else {
                           adddata().then((value) {
                             if (value) {
@@ -333,6 +345,19 @@ class _HisabOverviewPageState extends State<HisabOverviewPage> {
                 ),
               ),
             ),
+
+            // Row(children: [
+            //   Spacer(),
+            //   GestureDetector(
+            //       onTap: (){
+            //
+            //         hiveService.clearAllTransactions().then((value) {
+            //           getdata();
+            //         },);
+            //       },
+            //       child: Padding(padding: EdgeInsets.all(40), child: Icon(Icons.delete),),)
+            //
+            // ],),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 26, vertical: 0),
               padding: EdgeInsets.all(20),
@@ -349,60 +374,27 @@ class _HisabOverviewPageState extends State<HisabOverviewPage> {
               ),
               child: Column(
                 children: [
-                  GestureDetector(
-                    onTap: (){
-
-                      final newTransaction = {
-
-                        'title': 'New Expendwdwdwe',
-                        'amount': 100.0,
-
-                      };
-
-                      hiveService.addTransaction(newTransaction);
-
-
-
-                     // hiveService.clearAllTransactions();
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        overviewTile("Total Users", "${transactions.length}", Icons.people, iconBg: primaryColor),
-                        overviewTile("You Gave", "₹$totalgave", Icons.arrow_upward, iconBg: red),
-                      ],
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      overviewTile("Total Users", "${transactions.length}", Icons.people, iconBg: primaryColor),
+                      overviewTile("You Gave", "₹$totalgave", Icons.arrow_upward, iconBg: red),
+                    ],
                   ),
                   SizedBox(height: 16),
-                  GestureDetector(
-                    onTap: (){
-
-                      //hiveService.printAllTransactions();
-
-                     // var data = hiveService.getAllTransactions();
-                     // print("before- $data");
-                     //
-                     // var idata = hiveService.getTransactionById(data[2]["id"]);
-                     // idata!["title"] = "lllll";
-                     //  print("after by id - $idata" );
-                     //
-                     // hiveService.updateTransaction( idata!["id"], idata);
-                     print("all dta - ${hiveService.getAllTransactions()}");
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        overviewTile("You Got", "₹$totalgot", Icons.arrow_downward, iconBg: green),
-                        overviewTile("$netLabel", "₹${netBalance.abs()}", Icons.account_balance_wallet, iconBg: netBalance > 0 ? red : netBalance < 0 ? green : primaryColor2),
-                      ],
-                    ),
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      overviewTile("You Got", "₹$totalgot", Icons.arrow_downward, iconBg: green),
+                      overviewTile("$netLabel", "₹${netBalance.abs()}", Icons.account_balance_wallet, iconBg: netBalance > 0 ? red : netBalance < 0 ? green : primaryColor2),
+                    ],
+                  )
                 ],
               ),
             ),
 
-            // User list
-            Expanded(
+            transactions.isEmpty ? Center(child:  Padding(padding: EdgeInsets.only(top: 20), child: Global.nodata() ,))
+                : Expanded(
               child: ListView.builder(
                 padding: EdgeInsets.fromLTRB(16, 10, 16, 80),
                 itemCount: transactions.length,
@@ -454,9 +446,9 @@ class _HisabOverviewPageState extends State<HisabOverviewPage> {
                         title: Text(
                           name.toString(),
                           style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: Colors.black
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: Colors.black
                           ),
                         ),
                         subtitle: Text(
@@ -482,7 +474,8 @@ class _HisabOverviewPageState extends State<HisabOverviewPage> {
                   );
                 },
               ),
-            ),
+            )
+
 
           ],
         ),

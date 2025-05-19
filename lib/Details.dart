@@ -4,6 +4,7 @@ import 'HiveService.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:customtoastflutter/customtoast.dart';
+import 'package:hisabkitab/Global.dart';
 
 
 class Details extends StatefulWidget {
@@ -47,7 +48,7 @@ class _DetailsState extends State<Details> {
   String description = '';
   double amount = 0.0;
   
-  var txlist ;
+  List txlist  = [];
 
   bool loading = true;
 
@@ -415,7 +416,7 @@ class _DetailsState extends State<Details> {
 
 
 
-            Expanded(
+            txlist.isEmpty ? Global.nodata() :  Expanded(
               child: ListView.builder(
                 itemCount: txlist.length,
                 padding: EdgeInsets.fromLTRB(16, 0, 16, 80),
